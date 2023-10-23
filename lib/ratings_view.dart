@@ -40,26 +40,26 @@ class RatingView extends StatelessWidget {
 }
 
 
-class EmojiButton extends StatelessWidget {
-  const EmojiButton({
+class EmojiButton extends StatefulWidget {
+  EmojiButton({
     super.key,
     required this.rating,
     required this.onClicked
   });
 
-  const EmojiButton.veryLow({super.key, required this.onClicked}) :
+  EmojiButton.veryLow({super.key, required this.onClicked}) :
         rating = Rating.veryLow;
 
-  const EmojiButton.low({super.key, required this.onClicked}) :
+  EmojiButton.low({super.key, required this.onClicked}) :
         rating = Rating.low;
 
-  const EmojiButton.medium({super.key, required this.onClicked}) :
+  EmojiButton.medium({super.key, required this.onClicked}) :
         rating = Rating.medium;
 
-  const EmojiButton.high({super.key, required this.onClicked}) :
+  EmojiButton.high({super.key, required this.onClicked}) :
         rating = Rating.high;
 
-  const EmojiButton.veryHigh({super.key, required this.onClicked}) :
+  EmojiButton.veryHigh({super.key, required this.onClicked}) :
         rating = Rating.veryHigh;
 
   final Rating rating;
@@ -67,45 +67,105 @@ class EmojiButton extends StatelessWidget {
   final void Function(Rating) onClicked;
 
   @override
-  Widget build(BuildContext context) {
-    var assetName = getAssetNameByRating(rating);
-    return Expanded(
-      child: ElevatedButton(
-        onPressed: () {
-          onClicked(rating);
-          },
-
-        style: ElevatedButton.styleFrom(
-          shape: CircleBorder(),
-        ),
-
-        child: SizedBox(
-          width: double.infinity,
-          height: double.infinity,
-          child: SvgPicture.asset(
-              assetName,
-              semanticsLabel: 'A red up arrow',
-              fit: BoxFit.contain
-          ),
-        ),
-      ),
-    );
-  }
+  State<EmojiButton> createState() => _EmojiButtonState();
 
   static String getAssetNameByRating(rating) {
     switch (rating) {
       case Rating.veryLow:
-        return 'assets/images/svg/emoji.svg';
+        return 'assets/images/svg/ratings/ratings_very_low.svg';
       case Rating.low:
-        return 'assets/images/svg/emoji.svg';
+        return 'assets/images/svg/ratings/ratings_low.svg';
       case Rating.medium:
-        return 'assets/images/svg/emoji.svg';
+        return 'assets/images/svg/ratings/ratings_medium.svg';
       case Rating.high:
-        return 'assets/images/svg/emoji.svg';
+        return 'assets/images/svg/ratings/ratings_high.svg';
       case Rating.veryHigh:
-        return 'assets/images/svg/emoji.svg';
+        return 'assets/images/svg/ratings/ratings_very_high.svg';
       default:
         throw UnimplementedError("Rating $rating is unknown");
     }
+  }
+}
+
+class _EmojiButtonState extends State<EmojiButton> with SingleTickerProviderStateMixin{
+  late AnimationController controller;
+  late Animation positionAnimation;
+  late Animation opacityAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    controller =  AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 2000),
+      animationBehavior: AnimationBehavior.preserve,
+    );
+    positionAnimation = Tween<AlignmentDirectional>(
+      begin: AlignmentDirectional.center,
+      end: AlignmentDirectional.topCenter,
+    ).animate(CurvedAnimation(
+        parent: controller,
+        curve: Curves.slowMiddle
+    ));
+    opacityAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.0,
+    ).animate(CurvedAnimation(
+        parent: controller,
+        curve: Curves.easeInOutQuint
+    ));
+
+    controller.addListener(() {
+      setState(() {
+      });
+      if (controller.isCompleted) {
+        controller.reset();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var assetName = EmojiButton.getAssetNameByRating(widget.rating);
+
+    return Expanded(
+      child: Stack(
+        children:
+          [
+            Container(
+              alignment: positionAnimation.value,
+              child: Opacity(
+                opacity: opacityAnimation.value,
+                child: const Text(
+                  '+1',
+                  style: TextStyle(fontSize: 32.0,fontWeight: FontWeight.bold),),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                widget.onClicked(widget.rating);
+                if (controller.isAnimating) {
+                  controller.reset();
+                }
+                controller.forward();
+              },
+
+              style: ElevatedButton.styleFrom(
+                shape: CircleBorder(),
+              ),
+
+              child: SizedBox(
+                width: double.infinity,
+                height: double.infinity,
+                child: SvgPicture.asset(
+                    assetName,
+                    semanticsLabel: 'A red up arrow',
+                    fit: BoxFit.contain
+                ),
+              ),
+            ),
+          ]
+      ),
+    );
   }
 }
