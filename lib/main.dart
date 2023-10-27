@@ -1,5 +1,6 @@
 // Copyright (C) 2023 twyleg
 import 'package:flutter/material.dart';
+import 'package:playground_flutter_rating_app/settings_view.dart';
 import 'results_view.dart';
 import 'ratings_view.dart';
 import 'package:provider/provider.dart';
@@ -82,6 +83,8 @@ class _MyHomePageState extends State<MyHomePage> {
       case 1:
         page = ResultsView();
         break;
+      case 2:
+        page = SettingsView();
       default:
         throw UnimplementedError('no widget for $_selectedIndex');
     }
@@ -107,32 +110,58 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Drawer buildDrawer(BuildContext context) {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
+      child: Column(
         children: [
-          const DrawerHeader(
-            child: Text(
-              'Menu',
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
             ),
+            child: const SizedBox(
+              // size: Size.infinite,
+              width: double.infinity,
+              height: double.infinity,
+              child: Text("Menu", style: TextStyle(color: Colors.white))
+            )
           ),
+          Expanded(
+              child: ListView(
+                children: [
+                  ListTile(
+                    title: const Text('Rating'),
+                    leading: const Icon(Icons.emoji_emotions),
+                    onTap: () {
+                      setState(() {
+                        _selectedIndex = 0;
+                      });
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Results'),
+                    leading: const Icon(Icons.numbers),
+                    onTap: () {
+                      setState(() {
+                        _selectedIndex = 1;
+                      });
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              )
+          ),
+          const Spacer(),
+          const Divider(),
           ListTile(
-            title: const Text('Rating'),
+            title: const Text('Settings'),
+            leading: const Icon(Icons.settings),
             onTap: () {
               setState(() {
-                _selectedIndex = 0;
+                _selectedIndex = 2;
               });
               Navigator.pop(context);
             },
           ),
-          ListTile(
-            title: const Text('Results'),
-            onTap: () {
-              setState(() {
-                _selectedIndex = 1;
-              });
-              Navigator.pop(context);
-            },
-          ),
+
         ],
       ),
     );

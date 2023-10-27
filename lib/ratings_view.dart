@@ -1,30 +1,46 @@
 // Copyright (C) 2023 twyleg
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 enum Rating {veryLow, low, medium, high, veryHigh}
 
 class RatingView extends StatelessWidget {
-  const RatingView({
+  RatingView({
     super.key,
     required this.onRating
   });
 
   final void Function(Rating) onRating;
 
+  late EmojiButton ebvl;
+
+  void handleTimeout() {  // callback function
+    print("foo");
+  }
+
+  Timer scheduleTimeout([int milliseconds = 10000]) =>
+      Timer(Duration(milliseconds: milliseconds), handleTimeout);
+
+
   void buttonCallback(Rating rating) {
     onRating(rating);
+    // ebvl.
+    scheduleTimeout(2000);
   }
 
 
   @override
   Widget build(BuildContext context) {
+    ebvl = EmojiButton.veryLow(onClicked: buttonCallback);
+
     return Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          EmojiButton.veryLow(onClicked: buttonCallback),
+          ebvl,
           SizedBox(width: 10),
           EmojiButton.low(onClicked: buttonCallback),
           SizedBox(width: 10),
