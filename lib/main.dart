@@ -1,9 +1,10 @@
 // Copyright (C) 2023 twyleg
 import 'package:flutter/material.dart';
-import 'package:playground_flutter_rating_app/settings_view.dart';
-import 'results_view.dart';
-import 'ratings_view.dart';
+import 'package:playground_flutter_rating_app/settings_page.dart';
 import 'package:provider/provider.dart';
+import 'results_page.dart';
+import 'ratings_page.dart';
+import 'rating_app_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,40 +19,18 @@ class MyApp extends StatelessWidget {
       create: (context) => RatingAppModel(),
       child: MaterialApp(
         title: 'Rating App',
+        routes: {
+          "/": (context) => const MyHomePage(title: 'Rate your experience!')
+        },
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
           useMaterial3: true,
         ),
-        home: const MyHomePage(title: 'Rate your experience!'),
       ),
     );
   }
 }
 
-class RatingAppModel extends ChangeNotifier {
-
-  void addRating(Rating rating) {
-    _ratings.update(
-      rating,
-      (value) => ++value,
-      ifAbsent: () => 1,
-    );
-    notifyListeners();
-  }
-
-  int getRating(Rating rating) {
-    return _ratings[rating] ?? 0;
-  }
-
-  void clearRatings() {
-    for (final rating in Rating.values) {
-      _ratings[rating] = 0;
-    }
-    notifyListeners();
-  }
-
-  Map<Rating, int> _ratings = {};
-}
 
 
 class MyHomePage extends StatefulWidget {
@@ -75,16 +54,20 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
 
+    //
+    // print("settingsViewState: ${context.read<RatingAppModel>().getRatingTimeout().toDouble()}");
+    context.read<RatingAppModel>();
+
     Widget page;
     switch (_selectedIndex) {
       case 0:
-        page = RatingView(onRating: onRating,);
+        page = RatingsPage(onRating: onRating,);
         break;
       case 1:
-        page = ResultsView();
+        page = ResultsPage();
         break;
       case 2:
-        page = SettingsView();
+        page = SettingsPage();
       default:
         throw UnimplementedError('no widget for $_selectedIndex');
     }

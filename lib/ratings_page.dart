@@ -1,58 +1,96 @@
 // Copyright (C) 2023 twyleg
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'rating_app_model.dart';
+
 
 enum Rating {veryLow, low, medium, high, veryHigh}
 
-class RatingView extends StatelessWidget {
-  RatingView({
+
+class RatingsPage extends StatelessWidget {
+  RatingsPage({
     super.key,
     required this.onRating
   });
 
   final void Function(Rating) onRating;
 
-  late EmojiButton ebvl;
-
-  void handleTimeout() {  // callback function
-    print("foo");
+  void setEnabled(BuildContext context, bool enabled) {
+    var ratingsViewModel = context.read<RatingsViewModel>();
+    ratingsViewModel.enabled = enabled;
+    ratingsViewModel.notifyListeners();
   }
 
-  Timer scheduleTimeout([int milliseconds = 10000]) =>
-      Timer(Duration(milliseconds: milliseconds), handleTimeout);
 
-
-  void buttonCallback(Rating rating) {
+  void buttonCallback(BuildContext context, Rating rating) {
     onRating(rating);
-    // ebvl.
-    scheduleTimeout(2000);
+
+    final dialog = showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) => const AlertDialog(
+        title: Icon(
+          Icons.favorite,
+          color: Colors.pink,
+          size: 48,
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Awesome!\nThank You!!!',
+              style: TextStyle(fontSize: 32.0,fontWeight: FontWeight.bold, ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20),
+            LinearProgressIndicator(),
+          ],
+        ),
+      ),
+    );
+
+    var timeout = context.read<RatingAppModel>().getRatingTimeout();
+
+    Timer scheduleTimeout() =>
+        Timer(Duration(milliseconds: timeout), () {
+          setEnabled(context, true);
+          Navigator.popUntil(context, ModalRoute.withName('/'));
+        });
+
+    setEnabled(context, false);
+    scheduleTimeout();
   }
 
 
   @override
   Widget build(BuildContext context) {
-    ebvl = EmojiButton.veryLow(onClicked: buttonCallback);
-
-    return Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          ebvl,
-          SizedBox(width: 10),
-          EmojiButton.low(onClicked: buttonCallback),
-          SizedBox(width: 10),
-          EmojiButton.medium(onClicked: buttonCallback),
-          SizedBox(width: 10),
-          EmojiButton.high(onClicked: buttonCallback),
-          SizedBox(width: 10),
-          EmojiButton.veryHigh(onClicked: buttonCallback),
-        ],
+    return ChangeNotifierProvider(
+      create: (context) => RatingsViewModel(),
+      child: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            EmojiButton.veryLow(onClicked: buttonCallback),
+            SizedBox(width: 10),
+            EmojiButton.low(onClicked: buttonCallback),
+            SizedBox(width: 10),
+            EmojiButton.medium(onClicked: buttonCallback),
+            SizedBox(width: 10),
+            EmojiButton.high(onClicked: buttonCallback),
+            SizedBox(width: 10),
+            EmojiButton.veryHigh(onClicked: buttonCallback),
+          ],
+        ),
       ),
     );
   }
+}
+
+class RatingsViewModel extends ChangeNotifier {
+  bool enabled = true;
 }
 
 
@@ -80,7 +118,7 @@ class EmojiButton extends StatefulWidget {
 
   final Rating rating;
 
-  final void Function(Rating) onClicked;
+  final void Function(BuildContext, Rating) onClicked;
 
   @override
   State<EmojiButton> createState() => _EmojiButtonState();
@@ -158,16 +196,17 @@ class _EmojiButtonState extends State<EmojiButton> with SingleTickerProviderStat
               ),
             ),
             ElevatedButton(
-              onPressed: () {
-                widget.onClicked(widget.rating);
+              onPressed: Provider.of<RatingsViewModel>(context, listen: true).enabled ? () {
+                widget.onClicked(context, widget.rating);
                 if (controller.isAnimating) {
                   controller.reset();
                 }
                 controller.forward();
-              },
+              } : null,
+
 
               style: ElevatedButton.styleFrom(
-                shape: CircleBorder(),
+                shape: const CircleBorder()
               ),
 
               child: SizedBox(

@@ -1,24 +1,21 @@
 // Copyright (C) 2023 twyleg
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:playground_flutter_rating_app/main.dart';
-import 'package:playground_flutter_rating_app/ratings_view.dart';
 import 'package:provider/provider.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
+import 'rating_app_model.dart';
 
 
-class SettingsView extends StatefulWidget {
-  const SettingsView({
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({
     super.key,
   });
 
   @override
-  State<SettingsView> createState() => _SettingsViewState();
+  State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsViewState extends State<SettingsView> {
+class _SettingsPageState extends State<SettingsPage> {
 
 
   @override
@@ -38,8 +35,10 @@ class _SettingsViewState extends State<SettingsView> {
                   min: 0,
                   max: 10000,
                   step: 1000,
-                  value: 1000,
-                  onChanged: (value) => print(value),
+                  value: context.read<RatingAppModel>().getRatingTimeout().toDouble(),
+                  onChanged: (value) async {
+                    context.read<RatingAppModel>().setRatingTimeout(value.toInt());
+                  },
                 ),
               ),
             )

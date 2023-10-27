@@ -2,30 +2,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:playground_flutter_rating_app/main.dart';
-import 'package:playground_flutter_rating_app/ratings_view.dart';
+import 'package:playground_flutter_rating_app/ratings_page.dart';
 import 'package:provider/provider.dart';
+import 'rating_app_model.dart';
 
-enum ResultsViewState {public, internal}
+enum ResultsPageState {public, internal}
 
-class ResultsView extends StatefulWidget {
-  const ResultsView({
+class ResultsPage extends StatefulWidget {
+  const ResultsPage({
     super.key,
   });
 
 
   @override
-  State<ResultsView> createState() => _ResultsViewState();
+  State<ResultsPage> createState() => _ResultsPageState();
 }
 
-class _ResultsViewState extends State<ResultsView> {
+class _ResultsPageState extends State<ResultsPage> {
 
-  ResultsViewState resultsViewState = ResultsViewState.public;
+  ResultsPageState resultsViewState = ResultsPageState.public;
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: resultsViewState == ResultsViewState.public ? buildLoginPage() : buildResultsPage(),
+      child: resultsViewState == ResultsPageState.public ? buildLoginPage() : buildResultsPage(),
     );
   }
 
@@ -48,7 +48,7 @@ class _ResultsViewState extends State<ResultsView> {
         ElevatedButton(
             onPressed: () {
               setState(() {
-                resultsViewState = ResultsViewState.internal;
+                resultsViewState = ResultsPageState.internal;
               });
             },
             child: Text('Login')
@@ -93,10 +93,10 @@ class _ResultsViewState extends State<ResultsView> {
         ),
         SizedBox(height: 30,),
         ElevatedButton(
-            onPressed: () {
-              ratingAppModel.clearRatings();
-            },
-            child: const Text('Clear!')
+          onPressed: () {
+            ratingAppModel.clearRatings();
+          },
+          child: const Text('Clear!')
         )
       ],
     );
