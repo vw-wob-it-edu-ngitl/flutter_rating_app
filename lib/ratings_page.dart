@@ -2,20 +2,22 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:playground_flutter_rating_app/app_bar.dart';
 import 'package:provider/provider.dart';
 import 'rating_app_model.dart';
+import 'drawer.dart';
 
 
 enum Rating {veryLow, low, medium, high, veryHigh}
 
 
 class RatingsPage extends StatelessWidget {
-  RatingsPage({
+  const RatingsPage({
     super.key,
     required this.onRating
   });
 
-  final void Function(Rating) onRating;
+  final void Function(BuildContext, Rating) onRating;
 
   void setEnabled(BuildContext context, bool enabled) {
     var ratingsViewModel = context.read<RatingsViewModel>();
@@ -25,9 +27,9 @@ class RatingsPage extends StatelessWidget {
 
 
   void buttonCallback(BuildContext context, Rating rating) {
-    onRating(rating);
+    onRating(context, rating);
 
-    final dialog = showDialog(
+    showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) => const AlertDialog(
@@ -56,7 +58,7 @@ class RatingsPage extends StatelessWidget {
     Timer scheduleTimeout() =>
         Timer(Duration(milliseconds: timeout), () {
           setEnabled(context, true);
-          Navigator.popUntil(context, ModalRoute.withName('/'));
+          Navigator.popUntil(context, ModalRoute.withName('ratings'));
         });
 
     setEnabled(context, false);
@@ -66,23 +68,27 @@ class RatingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => RatingsViewModel(),
-      child: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            EmojiButton.veryLow(onClicked: buttonCallback),
-            SizedBox(width: 10),
-            EmojiButton.low(onClicked: buttonCallback),
-            SizedBox(width: 10),
-            EmojiButton.medium(onClicked: buttonCallback),
-            SizedBox(width: 10),
-            EmojiButton.high(onClicked: buttonCallback),
-            SizedBox(width: 10),
-            EmojiButton.veryHigh(onClicked: buttonCallback),
-          ],
+    return Scaffold(
+      appBar: buildMenuAppBar(context, 'Rate us!'),
+      drawer: buildDrawer(context),
+      body: ChangeNotifierProvider(
+        create: (context) => RatingsViewModel(),
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              EmojiButton.veryLow(onClicked: buttonCallback),
+              SizedBox(width: 10),
+              EmojiButton.low(onClicked: buttonCallback),
+              SizedBox(width: 10),
+              EmojiButton.medium(onClicked: buttonCallback),
+              SizedBox(width: 10),
+              EmojiButton.high(onClicked: buttonCallback),
+              SizedBox(width: 10),
+              EmojiButton.veryHigh(onClicked: buttonCallback),
+            ],
+          ),
         ),
       ),
     );

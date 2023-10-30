@@ -59,7 +59,28 @@ class RatingAppModel extends ChangeNotifier {
     _saveSettings();
   }
 
+  void login() {
+    _loggedIn = true;
+    notifyListeners();
+  }
 
+  void logout() {
+    _loggedIn = false;
+    notifyListeners();
+  }
+
+  bool isLoggedIn() => _loggedIn;
+
+  void setPin(int pin) {
+    _pin = pin;
+    notifyListeners();
+  }
+
+  int getPin() => _pin;
+
+  bool _loggedIn = false;
   Map<Rating, int> _ratings = {};
   int _ratingTimeout = 0;
+  int _pin = 0000;
+
 }
