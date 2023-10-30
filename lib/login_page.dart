@@ -13,8 +13,43 @@ class LoginPage extends StatelessWidget {
     super.key,
   });
 
+  void showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Icon(
+          Icons.error,
+          size: 48,
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              message,
+              style: const TextStyle(
+                fontSize: 32.0,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Try Again'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    var pin = -1;
+
     return Scaffold(
       appBar: buildMenuAppBar(context, 'Login'),
       drawer: buildDrawer(context),
@@ -34,14 +69,20 @@ class LoginPage extends StatelessWidget {
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(4),
                   ],
+                  onChanged: (value) => pin = (value != '' ? int.parse(value) : -1),
                 ),
               ),
               const SizedBox(height: 30),
               ElevatedButton(
                   onPressed: () {
                     var ratingAppModel = context.read<RatingAppModel>();
-                    ratingAppModel.login();
-                    context.go('/ratings');
+
+                    if (pin == ratingAppModel.getPin()) {
+                      ratingAppModel.login();
+                      context.go('/ratings');
+                    } else {
+                      showErrorDialog(context, 'Incorrect PIN!');
+                    }
                   },
                   child: Text('Login')
               ),

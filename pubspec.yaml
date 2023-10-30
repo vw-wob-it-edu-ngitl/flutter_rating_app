@@ -39,6 +39,7 @@ dependencies:
   flutter_spinbox: ^0.13.1
   shared_preferences: ^2.2.2
   go_router: ^12.0.1
+  logging: ^1.2.0
 
 dev_dependencies:
   flutter_test:

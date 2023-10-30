@@ -2,15 +2,25 @@
 import 'package:flutter/material.dart';
 import 'package:playground_flutter_rating_app/settings_page.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:logging/logging.dart';
 import 'login_page.dart';
 import 'results_page.dart';
 import 'ratings_page.dart';
 import 'rating_app_model.dart';
-import 'package:go_router/go_router.dart';
+
+final log = Logger('MAIN');
 
 
 void main() {
-  runApp(const MyApp());
+  Logger.root.level = Level.ALL;
+  Logger.root.onRecord.listen((record) {
+    print('${record.time.toIso8601String()}-${record.level.name}: ${record.message}');
+  });
+
+  log.info('Rating App Started!');
+
+  runApp(MyApp());
 }
 
 void onRating(BuildContext context, Rating rating) {
@@ -46,15 +56,15 @@ final _router = GoRouter(
 );
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  var ratingAppModel = RatingAppModel();
 
   @override
   Widget build(BuildContext context) {
 
-    var ratingAppModel = RatingAppModel();
-
-    return ChangeNotifierProvider(
-      create: (context) => ratingAppModel,
+    return ChangeNotifierProvider.value(
+      value: ratingAppModel,
       child: MaterialApp.router(
         title: 'Rating App',
         routerConfig: _router,

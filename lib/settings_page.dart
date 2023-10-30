@@ -4,10 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
+import 'package:logging/logging.dart';
 import 'package:playground_flutter_rating_app/app_bar.dart';
 import 'package:playground_flutter_rating_app/drawer.dart';
 import 'rating_app_model.dart';
 
+final log = Logger('SETTINGS');
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({
@@ -19,8 +21,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,18 +41,24 @@ class _SettingsPageState extends State<SettingsPage> {
                     min: 0,
                     max: 10000,
                     step: 1000,
-                    value: context.read<RatingAppModel>().getRatingTimeout().toDouble(),
+                    value: context
+                        .read<RatingAppModel>()
+                        .getRatingTimeout()
+                        .toDouble(),
                     onChanged: (value) async {
-                      context.read<RatingAppModel>().setRatingTimeout(value.toInt());
+                      context
+                          .read<RatingAppModel>()
+                          .setRatingTimeout(value.toInt());
                     },
                   ),
                 ),
               ),
               SettingsTile(
-                title: Text("Pin"),
+                title: const Text("Pin"),
                 trailing: Consumer<RatingAppModel>(
                   builder: (context, ratingAppModel, child) {
-                    return Text(ratingAppModel.getPin().toString().padLeft(4, '0'));
+                    return Text(
+                        ratingAppModel.getPin().toString().padLeft(4, '0'));
                   },
                 ),
                 onPressed: (context) {
@@ -70,17 +76,16 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 }
 
-
 class ChangePinPage extends StatelessWidget {
   ChangePinPage({
-      super.key,
+    super.key,
   });
 
   int _providedOldPin = 0;
   int _providedNewPin = 0;
   int _providedNewPinRepetition = 0;
 
-  Widget buildPinField(String title, int pin) {
+  Widget buildPinField(String title, Function(int) callback) {
     return TextField(
       decoration: InputDecoration(labelText: title),
       keyboardType: TextInputType.number,
@@ -88,9 +93,7 @@ class ChangePinPage extends StatelessWidget {
         FilteringTextInputFormatter.digitsOnly,
         LengthLimitingTextInputFormatter(4),
       ],
-      onChanged: (value) {
-        pin = int.parse(value);
-      },
+      onChanged: (value) => callback(value != '' ? int.parse(value) : -1),
     );
   }
 
@@ -107,11 +110,22 @@ class ChangePinPage extends StatelessWidget {
           children: [
             Text(
               message,
-              style: const TextStyle(fontSize: 32.0,fontWeight: FontWeight.bold, ),
+              style: const TextStyle(
+                fontSize: 32.0,
+                fontWeight: FontWeight.bold,
+              ),
               textAlign: TextAlign.center,
             ),
           ],
         ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Try Again'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
       ),
     );
   }
@@ -121,43 +135,46 @@ class ChangePinPage extends StatelessWidget {
     return Scaffold(
       appBar: buildBackAppBar(context, 'Change PIN'),
       body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
                 width: 200,
-                child: buildPinField('Old PIN', _providedOldPin)
-              ),
-              SizedBox(
+                child:
+                    buildPinField('Old PIN', (value) => _providedOldPin = value)),
+            SizedBox(
                 width: 200,
-                child: buildPinField('New PIN', _providedNewPin)
-              ),
-              SizedBox(
+                child:
+                    buildPinField('New PIN', (value) => _providedNewPin = value)),
+            SizedBox(
                 width: 200,
-                child: buildPinField('New PIN again', _providedNewPinRepetition)
-              ),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                  onPressed: () {
-                    var ratingAppModel = context.read<RatingAppModel>();
-                    var correctOldPin = ratingAppModel.getPin();
+                child: buildPinField('New PIN again',
+                    (value) => _providedNewPinRepetition = value)),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () {
+                var ratingAppModel = context.read<RatingAppModel>();
+                var correctOldPin = ratingAppModel.getPin();
 
-                    if (_providedOldPin != correctOldPin) {
-                      showErrorDialog(context, "Incorrect old PIN!");
-                    } else if (_providedNewPin != _providedNewPinRepetition) {
-                      showErrorDialog(context, "New PINs are not equal!!");
-                    } else {
-                      ratingAppModel.setPin(_providedNewPin);
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: const Text('Change pin!')
-              ),
-            ],
-          )
+                if (_providedOldPin != correctOldPin) {
+                  showErrorDialog(context, "Incorrect old PIN!");
+                  log.info('Failed to set new PIN: Old PIN incorrect!');
+                } else if (_providedNewPin != _providedNewPinRepetition) {
+                  showErrorDialog(context, "New PINs are not equal!!");
+                  log.info(
+                      'Failed to set new PIN: Repetition unequal original PIN!');
+                } else {
+                  ratingAppModel.setPin(_providedNewPin);
+                  log.info('Setting new PIN!');
+                  Navigator.pop(context);
+                }
+              },
+              child: const Text('Change pin!')
+            ),
+          ],
+        )
       ),
     );
   }
-
 }
