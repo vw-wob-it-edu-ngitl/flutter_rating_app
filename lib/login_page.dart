@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:playground_flutter_rating_app/app_bar.dart';
-import 'package:playground_flutter_rating_app/drawer.dart';
 import 'package:provider/provider.dart';
+import 'app_bar.dart';
+import 'drawer.dart';
 import 'rating_app_model.dart';
 
 

@@ -2,13 +2,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:playground_flutter_rating_app/app_bar.dart';
 import 'package:provider/provider.dart';
 import 'rating_app_model.dart';
 import 'drawer.dart';
+import 'app_bar.dart';
 
 
-enum Rating {veryLow, low, medium, high, veryHigh}
+enum RatingValue {veryLow, low, medium, high, veryHigh}
 
 
 class RatingsPage extends StatelessWidget {
@@ -17,7 +17,7 @@ class RatingsPage extends StatelessWidget {
     required this.onRating
   });
 
-  final void Function(BuildContext, Rating) onRating;
+  final void Function(BuildContext, RatingValue) onRating;
 
   void setEnabled(BuildContext context, bool enabled) {
     var ratingsViewModel = context.read<RatingsViewModel>();
@@ -26,7 +26,7 @@ class RatingsPage extends StatelessWidget {
   }
 
 
-  void buttonCallback(BuildContext context, Rating rating) {
+  void buttonCallback(BuildContext context, RatingValue rating) {
     onRating(context, rating);
 
     showDialog(
@@ -108,38 +108,38 @@ class EmojiButton extends StatefulWidget {
   });
 
   EmojiButton.veryLow({super.key, required this.onClicked}) :
-        rating = Rating.veryLow;
+        rating = RatingValue.veryLow;
 
   EmojiButton.low({super.key, required this.onClicked}) :
-        rating = Rating.low;
+        rating = RatingValue.low;
 
   EmojiButton.medium({super.key, required this.onClicked}) :
-        rating = Rating.medium;
+        rating = RatingValue.medium;
 
   EmojiButton.high({super.key, required this.onClicked}) :
-        rating = Rating.high;
+        rating = RatingValue.high;
 
   EmojiButton.veryHigh({super.key, required this.onClicked}) :
-        rating = Rating.veryHigh;
+        rating = RatingValue.veryHigh;
 
-  final Rating rating;
+  final RatingValue rating;
 
-  final void Function(BuildContext, Rating) onClicked;
+  final void Function(BuildContext, RatingValue) onClicked;
 
   @override
   State<EmojiButton> createState() => _EmojiButtonState();
 
   static String getAssetNameByRating(rating) {
     switch (rating) {
-      case Rating.veryLow:
+      case RatingValue.veryLow:
         return 'assets/images/svg/ratings/ratings_very_low.svg';
-      case Rating.low:
+      case RatingValue.low:
         return 'assets/images/svg/ratings/ratings_low.svg';
-      case Rating.medium:
+      case RatingValue.medium:
         return 'assets/images/svg/ratings/ratings_medium.svg';
-      case Rating.high:
+      case RatingValue.high:
         return 'assets/images/svg/ratings/ratings_high.svg';
-      case Rating.veryHigh:
+      case RatingValue.veryHigh:
         return 'assets/images/svg/ratings/ratings_very_high.svg';
       default:
         throw UnimplementedError("Rating $rating is unknown");

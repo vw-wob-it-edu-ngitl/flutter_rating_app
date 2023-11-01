@@ -1,8 +1,8 @@
 // Copyright (C) 2023 twyleg
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:playground_flutter_rating_app/rating_app_model.dart';
 import 'package:provider/provider.dart';
+import 'rating_app_model.dart';
 
 
 Drawer buildDrawer(BuildContext context) {
