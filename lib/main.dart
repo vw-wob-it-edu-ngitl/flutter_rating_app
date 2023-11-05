@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
-import 'login_page.dart';
-import 'results_page.dart';
-import 'ratings_page.dart';
+import 'screens/login_screen.dart';
+import 'screens/results_screen.dart';
+import 'screens/ratings_screen.dart';
 import 'rating_app_model.dart';
-import 'settings_page.dart';
+import 'screens/settings_screen.dart';
+import 'rating.dart';
+
 
 final log = Logger('MAIN');
 
@@ -20,7 +22,7 @@ void main() {
 
   log.info('Rating App Started!');
 
-  runApp(RatingApp());
+  runApp(const RatingApp());
 }
 
 void onRating(BuildContext context, RatingValue rating) {
@@ -28,7 +30,6 @@ void onRating(BuildContext context, RatingValue rating) {
   ratingAppModel.addRating(rating);
 }
 
-// GoRouter configuration
 final _router = GoRouter(
   initialLocation: '/ratings',
   routes: [
@@ -56,7 +57,7 @@ final _router = GoRouter(
 );
 
 class RatingApp extends StatefulWidget {
-  RatingApp({super.key});
+  const RatingApp({super.key});
 
   @override
   State<RatingApp> createState() => _RatingAppState();
@@ -67,16 +68,12 @@ class _RatingAppState extends State<RatingApp> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
     ratingAppModel.init();
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     return ChangeNotifierProvider.value(
       value: ratingAppModel,
       child: MaterialApp.router(

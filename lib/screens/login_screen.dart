@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'app_bar.dart';
-import 'drawer.dart';
-import 'rating_app_model.dart';
+import 'package:flutter_rating_app/app_bar.dart';
+import 'package:flutter_rating_app/drawer.dart';
+import 'package:flutter_rating_app/rating_app_model.dart';
 
 
 class LoginPage extends StatelessWidget {

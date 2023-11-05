@@ -68,20 +68,20 @@ class DatabaseInterface {
     return List.generate(maps.length, (i) => Rating.fromMap(maps[i]));
   }
 
-  Future<DateTime> getOldestRatingDateTime() async {
+  Future<DateTime?> getOldestRatingDateTime() async {
     final List<Map<String, dynamic>> maps = await _database.rawQuery(
         'SELECT * FROM ratings ORDER BY dateTime ASC LIMIT 1'
     );
 
-    return DateTime.parse(maps[0]['dateTime'] as String);
+    return maps.isNotEmpty ? DateTime.parse(maps[0]['dateTime'] as String) : null;
   }
 
-  Future<DateTime> getLatestRatingDateTime() async {
+  Future<DateTime?> getLatestRatingDateTime() async {
     final List<Map<String, dynamic>> maps = await _database.rawQuery(
         'SELECT * FROM ratings ORDER BY dateTime DESC LIMIT 1'
     );
 
-    return DateTime.parse(maps[0]['dateTime'] as String);
+    return maps.isNotEmpty ? DateTime.parse(maps[0]['dateTime'] as String) : null;
   }
 
 }

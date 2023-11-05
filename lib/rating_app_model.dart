@@ -3,19 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_app/database_interface.dart';
 import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'ratings_page.dart';
+import 'rating.dart';
 
 
 final log = Logger('APP_MODEL');
-
-// EmojiButton({
-//   super.key,
-//   required this.rating,
-//   required this.onClicked
-// });
-//
-// EmojiButton.veryLow({super.key, required this.onClicked}) :
-// rating = RatingValue.veryLow;
 
 
 class Rating {
@@ -44,9 +35,8 @@ class Rating {
   }
 
   @override
-  String toString() {
-    return 'id=$id, ratingValue=$ratingValue, dateTime=$dateTime';
-  }
+  String toString() => 'id=$id, ratingValue=$ratingValue, dateTime=$dateTime';
+
 }
 
 
@@ -55,6 +45,7 @@ class RatingAppModel extends ChangeNotifier {
   Future<void> init() async {
     await _loadSettings();
     await _loadRatings();
+    await _loadRatingsMetaData();
   }
 
   Future<SharedPreferences> _initSharedPreferences() async {
@@ -105,35 +96,49 @@ class RatingAppModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> _loadRatingsMetaData() async {
+    _oldestRatingDateTime = await _databaseInterface.getOldestRatingDateTime();
+    _latestRatingDateTime = await _databaseInterface.getLatestRatingDateTime();
+
+    notifyListeners();
+  }
+
   void addRating(RatingValue rating) {
     _ratings.update(
       rating,
           (value) => ++value,
       ifAbsent: () => 1,
     );
+    notifyListeners();
 
     _databaseInterface.insertRating(Rating(ratingValue: rating, dateTime: DateTime.now()));
-
-    notifyListeners();
+    _loadRatingsMetaData();
   }
 
-  int getRating(RatingValue rating) {
-    return _ratings[rating] ?? 0;
-  }
+  int getRating(RatingValue rating) => _ratings[rating] ?? 0;
 
   void clearRatings() {
     for (final rating in RatingValue.values) {
       _ratings[rating] = 0;
     }
+    notifyListeners();
 
     _databaseInterface.clearRatings();
-
-    notifyListeners();
+    _loadRatingsMetaData();
   }
 
-  int getRatingTimeout() {
-    return _ratingTimeout;
+  int getTotalNumberOfRatings() {
+    var totalNumberOfRating = 0;
+    for(var ratings in _ratings.values) {
+      totalNumberOfRating += ratings;
+    }
+    return totalNumberOfRating;
   }
+
+  DateTime? getOldestRatingDateTime() => _oldestRatingDateTime;
+  DateTime? getLatestRatingDateTime() => _latestRatingDateTime;
+
+  int getRatingTimeout() => _ratingTimeout;
 
   void setRatingTimeout(int ratingTimeout) {
     _ratingTimeout = ratingTimeout;
@@ -161,6 +166,8 @@ class RatingAppModel extends ChangeNotifier {
 
   bool _loggedIn = false;
   final Map<RatingValue, int> _ratings = {};
+  DateTime? _oldestRatingDateTime;
+  DateTime? _latestRatingDateTime;
   int _ratingTimeout = 0;
   int _pin = 0000;
 

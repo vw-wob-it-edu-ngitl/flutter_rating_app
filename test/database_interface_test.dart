@@ -1,7 +1,7 @@
 // Copyright (C) 2023 twyleg
 import 'package:flutter_rating_app/database_interface.dart';
 import 'package:flutter_rating_app/rating_app_model.dart';
-import 'package:flutter_rating_app/ratings_page.dart';
+import 'package:flutter_rating_app/rating.dart';
 import 'package:test/test.dart';
 
 void main() async {

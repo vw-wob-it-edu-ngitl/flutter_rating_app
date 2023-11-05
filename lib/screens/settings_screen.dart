@@ -5,9 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:logging/logging.dart';
-import 'app_bar.dart';
-import 'drawer.dart';
-import 'rating_app_model.dart';
+import 'package:flutter_rating_app/app_bar.dart';
+import 'package:flutter_rating_app/drawer.dart';
+import 'package:flutter_rating_app/rating_app_model.dart';
 
 final log = Logger('SETTINGS');
 
