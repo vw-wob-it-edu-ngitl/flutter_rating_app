@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'screens/login_screen.dart';
 import 'screens/results_screen.dart';
 import 'screens/ratings_screen.dart';
@@ -76,14 +77,19 @@ class _RatingAppState extends State<RatingApp> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value: ratingAppModel,
-      child: MaterialApp.router(
-        title: 'Rating App',
-        routerConfig: _router,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
-          useMaterial3: true,
+      child: Consumer<RatingAppModel>(
+        builder: (context, provider, child) => MaterialApp.router(
+          title: 'Rating App',
+          routerConfig: _router,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
+            useMaterial3: true,
+          ),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: Locale(Provider.of<RatingAppModel>(context).getLocale())
         ),
-      ),
+      )
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:logging/logging.dart';
 import 'package:flutter_rating_app/app_bar.dart';
 import 'package:flutter_rating_app/drawer.dart';
 import 'package:flutter_rating_app/rating_app_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final log = Logger('SETTINGS');
 
@@ -24,16 +25,27 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildMenuAppBar(context, 'Settings'),
+      appBar: buildMenuAppBar(context, AppLocalizations.of(context)!.settingsScreenAppBarTitle),
       drawer: buildDrawer(context),
       body: SettingsList(
         sections: [
           SettingsSection(
-            title: const Text("General"),
+            title: Text(AppLocalizations.of(context)!.settingsScreenAppBarTitle),
             tiles: <SettingsTile>[
+              SettingsTile.navigation(
+                leading: const Icon(Icons.language),
+                title: Text(AppLocalizations.of(context)!.settingsScreenSettingLanguage),
+                trailing: Text(Provider.of<RatingAppModel>(context).getLocale()),
+                onPressed: (context) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ChangeLanguagePage()),
+                  );
+                },
+              ),
               SettingsTile(
                 leading: const Icon(Icons.timer),
-                title: const Text("Rating timeout (ms)"),
+                title: Text(AppLocalizations.of(context)!.settingsScreenSettingRatingTimeout),
                 trailing: SizedBox(
                   width: 300,
                   height: 50,
@@ -54,6 +66,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               SettingsTile(
+                leading: const Icon(Icons.security),
                 title: const Text("Pin"),
                 trailing: Consumer<RatingAppModel>(
                   builder: (context, ratingAppModel, child) {
@@ -120,7 +133,7 @@ class ChangePinPage extends StatelessWidget {
         ),
         actions: <Widget>[
           TextButton(
-            child: const Text('Try Again'),
+            child: Text(AppLocalizations.of(context)!.tryAgain),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -133,47 +146,90 @@ class ChangePinPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildBackAppBar(context, 'Change PIN'),
+      appBar: buildBackAppBar(context, AppLocalizations.of(context)!.changePin),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-                width: 200,
-                child:
-                    buildPinField('Old PIN', (value) => _providedOldPin = value)),
-            SizedBox(
-                width: 200,
-                child:
-                    buildPinField('New PIN', (value) => _providedNewPin = value)),
-            SizedBox(
-                width: 200,
-                child: buildPinField('New PIN again',
-                    (value) => _providedNewPinRepetition = value)),
-            const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () {
-                var ratingAppModel = context.read<RatingAppModel>();
-                var correctOldPin = ratingAppModel.getPin();
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                  width: 200,
+                  child:
+                  buildPinField(AppLocalizations.of(context)!.oldPin, (value) => _providedOldPin = value)),
+              SizedBox(
+                  width: 200,
+                  child:
+                  buildPinField(AppLocalizations.of(context)!.newPin, (value) => _providedNewPin = value)),
+              SizedBox(
+                  width: 200,
+                  child: buildPinField(AppLocalizations.of(context)!.newPinAgain,
+                          (value) => _providedNewPinRepetition = value)),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                  onPressed: () {
+                    var ratingAppModel = context.read<RatingAppModel>();
+                    var correctOldPin = ratingAppModel.getPin();
 
-                if (_providedOldPin != correctOldPin) {
-                  showErrorDialog(context, "Incorrect old PIN!");
-                  log.info('Failed to set new PIN: Old PIN incorrect!');
-                } else if (_providedNewPin != _providedNewPinRepetition) {
-                  showErrorDialog(context, "New PINs are not equal!!");
-                  log.info(
-                      'Failed to set new PIN: Repetition unequal original PIN!');
-                } else {
-                  ratingAppModel.setPin(_providedNewPin);
-                  log.info('Setting new PIN!');
-                  Navigator.pop(context);
-                }
-              },
-              child: const Text('Change pin!')
-            ),
-          ],
-        )
+                    if (_providedOldPin != correctOldPin) {
+                      showErrorDialog(context, AppLocalizations.of(context)!.incorrectOldPin);
+                      log.info('Failed to set new PIN: Old PIN incorrect!');
+                    } else if (_providedNewPin != _providedNewPinRepetition) {
+                      showErrorDialog(context, AppLocalizations.of(context)!.newPinsUnequal);
+                      log.info(
+                          'Failed to set new PIN: Repetition unequal original PIN!');
+                    } else {
+                      ratingAppModel.setPin(_providedNewPin);
+                      log.info('Setting new PIN!');
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Text(AppLocalizations.of(context)!.newPinsUnequal)
+              ),
+            ],
+          )
+      ),
+    );
+  }
+}
+
+class ChangeLanguagePage extends StatelessWidget {
+  ChangeLanguagePage({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: buildBackAppBar(context, AppLocalizations.of(context)!.changeLanguage),
+      body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ListTile(
+                title: const Text('Deutsch'),
+                leading: Radio<String>(
+                  value: 'de',
+                  groupValue: Provider.of<RatingAppModel>(context).getLocale(),
+                  onChanged: (String? value) {
+                    Provider.of<RatingAppModel>(context, listen: false).setLocale(value ?? 'en');
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+              ListTile(
+                title: const Text('English'),
+                leading: Radio<String>(
+                  value: 'en',
+                  groupValue: Provider.of<RatingAppModel>(context).getLocale(),
+                  onChanged: (String? value) {
+                    Provider.of<RatingAppModel>(context, listen: false).setLocale(value ?? 'en');
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            ],
+          )
       ),
     );
   }

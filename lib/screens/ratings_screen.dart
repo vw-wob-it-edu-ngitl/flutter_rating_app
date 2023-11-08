@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_rating_app/rating_app_model.dart';
 import 'package:flutter_rating_app/drawer.dart';
 import 'package:flutter_rating_app/app_bar.dart';
@@ -34,8 +35,8 @@ class RatingsPage extends StatelessWidget {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) => const AlertDialog(
-        title: Icon(
+      builder: (BuildContext context) => AlertDialog(
+        title: const Icon(
           Icons.favorite,
           color: Colors.pink,
           size: 48,
@@ -44,12 +45,13 @@ class RatingsPage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Awesome!\nThank You!!!',
-              style: TextStyle(fontSize: 32.0,fontWeight: FontWeight.bold, ),
+              // 'Awesome!\nThank You!!!',
+              AppLocalizations.of(context)!.ratingThankYouMessage,
+              style: const TextStyle(fontSize: 32.0,fontWeight: FontWeight.bold, ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 20),
-            LinearProgressIndicator(),
+            const SizedBox(height: 20),
+            const LinearProgressIndicator(),
           ],
         ),
       ),
@@ -71,7 +73,7 @@ class RatingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildMenuAppBar(context, 'Rate us!'),
+      appBar: buildMenuAppBar(context, AppLocalizations.of(context)!.ratingScreenAppBarTitle),
       drawer: buildDrawer(context),
       body: ChangeNotifierProvider(
         create: (context) => RatingsViewModel(),
@@ -81,9 +83,10 @@ class RatingsPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 30),
-                const Text(
-                  "How was your experience?",
-                  style: TextStyle(
+                Text(
+                  // "How was your experience?"
+                  AppLocalizations.of(context)!.ratingScreenHeadline,
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 40
                   ),
@@ -101,15 +104,15 @@ class RatingsPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  EmojiButton.veryLow(caption: "Very bad!", onClicked: buttonCallback),
+                  EmojiButton.veryLow(caption: AppLocalizations.of(context)!.ratingScreenRatingVeryBad, onClicked: buttonCallback),
                   const SizedBox(width: 10),
                   EmojiButton.low(onClicked: buttonCallback),
                   const SizedBox(width: 10),
-                  EmojiButton.medium(caption: "Medium!", onClicked: buttonCallback),
+                  EmojiButton.medium(caption: AppLocalizations.of(context)!.ratingScreenRatingMedium, onClicked: buttonCallback),
                   const SizedBox(width: 10),
                   EmojiButton.high(onClicked: buttonCallback),
                   const SizedBox(width: 10),
-                  EmojiButton.veryHigh(caption: "Very good!", onClicked: buttonCallback),
+                  EmojiButton.veryHigh(caption: AppLocalizations.of(context)!.ratingScreenRatingVeryGood, onClicked: buttonCallback),
                 ],
               ),
             ),

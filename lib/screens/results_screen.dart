@@ -7,6 +7,7 @@ import 'package:flutter_rating_app/rating_app_model.dart';
 import 'package:flutter_rating_app/app_bar.dart';
 import 'package:flutter_rating_app/drawer.dart';
 import 'package:flutter_rating_app/rating.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class _RatingsMetaData extends StatelessWidget {
@@ -17,9 +18,9 @@ class _RatingsMetaData extends StatelessWidget {
     var ratingAppModel = Provider.of<RatingAppModel>(context);
 
     var ratingMetaDataKeys = [
-      "Total number",
-      "Oldest rating",
-      "Latest rating"
+      AppLocalizations.of(context)!.resultsScreenMetaTotalRatings,
+      AppLocalizations.of(context)!.resultsScreenMetaFirstRating,
+      AppLocalizations.of(context)!.resultsScreenMetaLatestRating
     ];
     var ratingMetaDataValues = [
       ratingAppModel.getTotalNumberOfRatings(),
@@ -184,7 +185,7 @@ class ResultsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildMenuAppBar(context, 'Results'),
+      appBar: buildMenuAppBar(context, AppLocalizations.of(context)!.resultsScreenAppBarTitle),
       drawer: buildDrawer(context),
       body: Center(
           child: Consumer<RatingAppModel>(
@@ -207,7 +208,7 @@ class ResultsPage extends StatelessWidget {
                         onPressed: () {
                           context.read<RatingAppModel>().clearRatings();
                         },
-                        child: const Text('Clear!')
+                        child: Text(AppLocalizations.of(context)!.resultsScreenClear)
                     )
                   ],
                 );

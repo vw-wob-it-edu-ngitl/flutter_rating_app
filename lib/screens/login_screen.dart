@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_rating_app/app_bar.dart';
 import 'package:flutter_rating_app/drawer.dart';
 import 'package:flutter_rating_app/rating_app_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class LoginPage extends StatelessWidget {
@@ -36,7 +37,7 @@ class LoginPage extends StatelessWidget {
         ),
         actions: <Widget>[
           TextButton(
-            child: const Text('Try Again'),
+            child: Text(AppLocalizations.of(context)!.tryAgain),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -81,10 +82,10 @@ class LoginPage extends StatelessWidget {
                       ratingAppModel.login();
                       context.go('/ratings');
                     } else {
-                      showErrorDialog(context, 'Incorrect PIN!');
+                      showErrorDialog(context, AppLocalizations.of(context)!.incorrectPin);
                     }
                   },
-                  child: Text('Login')
+                  child: const Text('Login')
               ),
             ],
           )

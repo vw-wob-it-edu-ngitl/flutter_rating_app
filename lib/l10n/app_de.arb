@@ -1,0 +1,34 @@
+{
+  "tryAgain": "Bitte versuche es erneut!",
+  "incorrectPin": "Falscher PIN.",
+  "changePin": "PIN ändern",
+  "changeLanguage": "Sprache ändern",
+  "oldPin": "Alter PIN",
+  "newPin": "Neuer PIN",
+  "newPinAgain": "Neuen PIN wiederholen",
+  "incorrectOldPin": "Alter Pin falsch!",
+  "newPinsUnequal": "Neue PINs ungleich!!!",
+  "settingNewPin": "Setting new PIN!",
+
+  "ratingThankYouMessage": "Super!\nDankeschön!!!",
+  "ratingScreenAppBarTitle": "Bewerte uns!",
+  "ratingScreenHeadline": "Wie gut hat es dir gefallen?",
+  "ratingScreenRatingVeryBad": "Sehr schlecht!",
+  "ratingScreenRatingMedium": "Mittel",
+  "ratingScreenRatingVeryGood": "Sehr gut!",
+
+  "resultsScreenAppBarTitle": "Ergebnisse",
+  "resultsScreenClear": "Zurücksetzen!",
+  "resultsScreenMetaTotalRatings": "Gesamt",
+  "resultsScreenMetaFirstRating": " Erste Bewertung",
+  "resultsScreenMetaLatestRating": "Letzte Bewertung",
+
+  "settingsScreenAppBarTitle": "Einstellungen",
+  "settingsScreenSectionGeneral": "Allgemein",
+  "settingsScreenSettingLanguage": "Sprache",
+  "settingsScreenSettingRatingTimeout": "Auszeit zwischen Bewertungen (ms)",
+
+  "drawerRatings": "Bewertungen",
+  "drawerResults": "Ergebnisse",
+  "drawerSettings": "Einstellungen"
+}

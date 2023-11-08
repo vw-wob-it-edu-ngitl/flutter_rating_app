@@ -55,6 +55,7 @@ class RatingAppModel extends ChangeNotifier {
       prefs = await SharedPreferences.getInstance();
     } catch(e) {
       const defaultSettings = {
+        'locale': 'en',
         'rating_timeout': 2000,
         'pin': "0000"
       };
@@ -68,6 +69,7 @@ class RatingAppModel extends ChangeNotifier {
 
   Future<void> _loadSettings() async {
     var prefs = await _initSharedPreferences();
+    _locale = prefs.getString('locale') ?? 'en';
     _ratingTimeout = prefs.getInt('rating_timeout') ?? 0;
     _pin = prefs.getInt('pin') ?? 0;
     notifyListeners();
@@ -75,6 +77,7 @@ class RatingAppModel extends ChangeNotifier {
 
   Future<void> _saveSettings() async {
     final prefs = await SharedPreferences.getInstance();
+    prefs.setString('locale', _locale);
     prefs.setInt('rating_timeout', _ratingTimeout);
     prefs.setInt('pin', _pin);
     log.info('Saved settings.');
@@ -164,12 +167,20 @@ class RatingAppModel extends ChangeNotifier {
 
   int getPin() => _pin;
 
+  void setLocale(String locale) {
+    _locale = locale;
+    notifyListeners();
+  }
+
+  String getLocale() => _locale;
+
   bool _loggedIn = false;
   final Map<RatingValue, int> _ratings = {};
   DateTime? _oldestRatingDateTime;
   DateTime? _latestRatingDateTime;
   int _ratingTimeout = 0;
   int _pin = 0000;
+  String _locale = 'en';
 
   final DatabaseInterface _databaseInterface = DatabaseInterface();
 
