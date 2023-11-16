@@ -92,11 +92,11 @@ class RatingsPage extends StatelessWidget {
                   ),
                 ),
                 Expanded(child: Container()),
-                const SizedBox(
-                  height: 200,
-                  width: 200,
-                  child: Placeholder(),
-                )
+                // const SizedBox(
+                //   height: 200,
+                //   width: 200,
+                //   child: Placeholder(),
+                // )
               ],
             ),
             Center(
