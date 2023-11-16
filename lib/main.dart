@@ -1,141 +1,95 @@
 // Copyright (C) 2023 twyleg
 import 'package:flutter/material.dart';
-import 'results_view.dart';
-import 'ratings_view.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:logging/logging.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'screens/login_screen.dart';
+import 'screens/results_screen.dart';
+import 'screens/ratings_screen.dart';
+import 'rating_app_model.dart';
+import 'screens/settings_screen.dart';
+import 'rating.dart';
+
+
+final log = Logger('MAIN');
+
 
 void main() {
-  runApp(const MyApp());
+  Logger.root.level = Level.ALL;
+  Logger.root.onRecord.listen((record) {
+    print('${record.time.toIso8601String()}-${record.level.name}: ${record.message}');
+  });
+
+  log.info('Rating App Started!');
+
+  runApp(const RatingApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+void onRating(BuildContext context, RatingValue rating) {
+  var ratingAppModel = context.read<RatingAppModel>();
+  ratingAppModel.addRating(rating);
+}
+
+final _router = GoRouter(
+  initialLocation: '/ratings',
+  routes: [
+    GoRoute(
+      name: 'ratings', // Optional, add name to your routes. Allows you navigate by name instead of path
+      path: '/ratings',
+      builder: (context, state) => const RatingsPage(onRating: onRating),
+    ),
+    GoRoute(
+      name: 'results',
+      path: '/results',
+      builder: (context, state) => const ResultsPage(),
+    ),
+    GoRoute(
+      name: 'settings',
+      path: '/settings',
+      builder: (context, state) => const SettingsPage(),
+    ),
+    GoRoute(
+      name: 'login',
+      path: '/login',
+      builder: (context, state) => const LoginPage(),
+    ),
+  ],
+);
+
+class RatingApp extends StatefulWidget {
+  const RatingApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => RatingAppModel(),
-      child: MaterialApp(
-        title: 'Rating App',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
-          useMaterial3: true,
-        ),
-        home: const MyHomePage(title: 'Rate your experience!'),
-      ),
-    );
-  }
+  State<RatingApp> createState() => _RatingAppState();
 }
 
-class RatingAppModel extends ChangeNotifier {
-
-  void addRating(Rating rating) {
-    _ratings.update(
-      rating,
-      (value) => ++value,
-      ifAbsent: () => 1,
-    );
-    notifyListeners();
-  }
-
-  int getRating(Rating rating) {
-    return _ratings[rating] ?? 0;
-  }
-
-  void clearRatings() {
-    for (final rating in Rating.values) {
-      _ratings[rating] = 0;
-    }
-    notifyListeners();
-  }
-
-  Map<Rating, int> _ratings = {};
-}
-
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class _RatingAppState extends State<RatingApp> {
+  RatingAppModel ratingAppModel = RatingAppModel();
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
-
-
-  void onRating(Rating rating) {
-    var ratingAppModel = context.read<RatingAppModel>();
-    ratingAppModel.addRating(rating);
+  void initState() {
+    super.initState();
+    ratingAppModel.init();
   }
 
   @override
   Widget build(BuildContext context) {
-
-    Widget page;
-    switch (_selectedIndex) {
-      case 0:
-        page = RatingView(onRating: onRating,);
-        break;
-      case 1:
-        page = ResultsView();
-        break;
-      default:
-        throw UnimplementedError('no widget for $_selectedIndex');
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: Text(widget.title, style: const TextStyle(color: Colors.white),),
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.menu, color: Colors.white),
-              onPressed: () => Scaffold.of(context).openDrawer(),
-            );
-          }
+    return ChangeNotifierProvider.value(
+      value: ratingAppModel,
+      child: Consumer<RatingAppModel>(
+        builder: (context, provider, child) => MaterialApp.router(
+          title: 'Rating App',
+          routerConfig: _router,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
+            useMaterial3: true,
+          ),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: Locale(Provider.of<RatingAppModel>(context).getLocale())
         ),
-      ),
-      drawer: buildDrawer(context),
-      body: page,
-    );
-  }
-
-
-  Drawer buildDrawer(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          const DrawerHeader(
-            child: Text(
-              'Menu',
-            ),
-          ),
-          ListTile(
-            title: const Text('Rating'),
-            onTap: () {
-              setState(() {
-                _selectedIndex = 0;
-              });
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            title: const Text('Results'),
-            onTap: () {
-              setState(() {
-                _selectedIndex = 1;
-              });
-              Navigator.pop(context);
-            },
-          ),
-        ],
-      ),
+      )
     );
   }
 }
-

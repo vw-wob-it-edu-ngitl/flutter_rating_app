@@ -1,0 +1,34 @@
+{
+  "tryAgain": "Try Again!",
+  "incorrectPin": "Incorrect PIN.",
+  "changePin": "Change PIN",
+  "changeLanguage": "Change language",
+  "oldPin": "Old PIN",
+  "newPin": "New PIN",
+  "newPinAgain": "New PIN again",
+  "incorrectOldPin": "Incorrect old Pin!",
+  "newPinsUnequal": "New PINs are not equal!!!",
+  "settingNewPin": "Settings new PIN!",
+
+  "ratingThankYouMessage": "Awesome!\nThank You!!!",
+  "ratingScreenAppBarTitle": "Rate us!",
+  "ratingScreenHeadline": "How was your experience?",
+  "ratingScreenRatingVeryBad": "Very bad!",
+  "ratingScreenRatingMedium": "Medium",
+  "ratingScreenRatingVeryGood": "Very good!",
+
+  "resultsScreenAppBarTitle": "Results",
+  "resultsScreenClear": "Clear!",
+  "resultsScreenMetaTotalRatings": "Total number",
+  "resultsScreenMetaFirstRating": "First rating",
+  "resultsScreenMetaLatestRating": "Latest rating",
+
+  "settingsScreenAppBarTitle": "Settings",
+  "settingsScreenSectionGeneral": "General",
+  "settingsScreenSettingLanguage": "Language",
+  "settingsScreenSettingRatingTimeout": "Rating timeout (ms)",
+
+  "drawerRatings": "Ratings",
+  "drawerResults": "Results",
+  "drawerSettings": "Settings"
+}
