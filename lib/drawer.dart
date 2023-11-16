@@ -1,8 +1,9 @@
 // Copyright (C) 2023 twyleg
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:playground_flutter_rating_app/rating_app_model.dart';
 import 'package:provider/provider.dart';
+import 'rating_app_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 Drawer buildDrawer(BuildContext context) {
@@ -26,7 +27,7 @@ Drawer buildDrawer(BuildContext context) {
             child: ListView(
               children: [
                 ListTile(
-                  title: const Text('Rating'),
+                  title: Text(AppLocalizations.of(context)!.drawerRatings),
                   leading: const Icon(Icons.emoji_emotions),
                   onTap: () {
                     context.go('/ratings');
@@ -36,7 +37,7 @@ Drawer buildDrawer(BuildContext context) {
                   builder: (context, ratingAppModel, child) {
                     if (ratingAppModel.isLoggedIn()) {
                       return ListTile(
-                        title: const Text('Results'),
+                        title: Text(AppLocalizations.of(context)!.drawerResults),
                         leading: const Icon(Icons.numbers),
                         onTap: () {
                           context.go('/results');
@@ -57,7 +58,7 @@ Drawer buildDrawer(BuildContext context) {
             builder: (context, ratingAppModel, child) {
               if (ratingAppModel.isLoggedIn()) {
                 return ListTile(
-                  title: const Text('Settings'),
+                  title: Text(AppLocalizations.of(context)!.drawerSettings),
                   leading: const Icon(Icons.settings),
                   onTap: () {
                     context.go('/settings');
