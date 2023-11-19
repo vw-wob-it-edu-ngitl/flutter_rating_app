@@ -1,12 +1,15 @@
 // Copyright (C) 2023 twyleg
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kiosk_mode/kiosk_mode.dart';
 import 'package:provider/provider.dart';
 import 'rating_app_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 Drawer buildDrawer(BuildContext context) {
+  late final Stream<KioskMode> _currentMode = watchKioskMode();
+
   return Drawer(
     child: Column(
       children: [
@@ -54,6 +57,50 @@ Drawer buildDrawer(BuildContext context) {
         const Spacer(),
         const Divider(),
 
+        // Consumer<RatingAppModel>(
+        //     builder: (context, ratingAppModel, child) {
+        //       if (ratingAppModel.isLoggedIn()) {
+        //         return ListTile(
+        //           title: Text('Kiosk on'),
+        //           leading: const Icon(Icons.lock),
+        //           onTap: () async {
+        //             await startKioskMode();
+        //           },
+        //         );
+        //       } else {
+        //         return const SizedBox();
+        //       }
+        //     }
+        // ),
+
+        Consumer<RatingAppModel>(
+          builder: (context, ratingAppModel, child) {
+            if (ratingAppModel.isLoggedIn()) {
+              return StreamBuilder(
+                  stream: _currentMode,
+                  builder: (context, snapshot) {
+                    final mode = snapshot.data;
+
+                    return ListTile(
+                      title: Text(mode == null || mode == KioskMode.disabled
+                          ? 'Start Kiosk'
+                          : 'Stop Kiosk'),
+                      leading: const Icon(Icons.lock),
+                      onTap: () async {
+                        if (mode == null || mode == KioskMode.disabled) {
+                          await startKioskMode();
+                        } else {
+                          await stopKioskMode();
+                        }
+                      },
+                    );
+                  }
+              );
+            } else {
+              return SizedBox();
+            }
+          }
+        ),
         Consumer<RatingAppModel>(
             builder: (context, ratingAppModel, child) {
               if (ratingAppModel.isLoggedIn()) {

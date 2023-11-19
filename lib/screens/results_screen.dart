@@ -133,7 +133,7 @@ class _BarChart extends StatelessWidget {
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 200,
+            reservedSize: 100,
             getTitlesWidget: getTitles,
           ),
         ),
@@ -195,7 +195,7 @@ class ResultsPage extends StatelessWidget {
                   children: [
                     const SizedBox(
                       width: 500,
-                      height: 500,
+                      height: 300,
                       child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8),
                           child: _BarChart()

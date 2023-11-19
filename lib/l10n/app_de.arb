@@ -12,10 +12,10 @@
 
   "ratingThankYouMessage": "Super!\nDankeschön!!!",
   "ratingScreenAppBarTitle": "Bewerte uns!",
-  "ratingScreenHeadline": "Wie gut hat es dir gefallen?",
-  "ratingScreenRatingVeryBad": "Sehr schlecht!",
+  "ratingScreenHeadline": "Wie zufrieden warst du mit dem eMotionDay bei uns in der Lean Akademie?",
+  "ratingScreenRatingVeryBad": "Sehr unzufrieden!",
   "ratingScreenRatingMedium": "Mittel",
-  "ratingScreenRatingVeryGood": "Sehr gut!",
+  "ratingScreenRatingVeryGood": "Sehr zufrieden!",
 
   "resultsScreenAppBarTitle": "Ergebnisse",
   "resultsScreenClear": "Zurücksetzen!",

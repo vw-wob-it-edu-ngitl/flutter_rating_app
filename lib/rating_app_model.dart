@@ -69,8 +69,8 @@ class RatingAppModel extends ChangeNotifier {
 
   Future<void> _loadSettings() async {
     var prefs = await _initSharedPreferences();
-    _locale = prefs.getString('locale') ?? 'en';
-    _ratingTimeout = prefs.getInt('rating_timeout') ?? 0;
+    _locale = prefs.getString('locale') ?? 'de';
+    _ratingTimeout = prefs.getInt('rating_timeout') ?? 2000;
     _pin = prefs.getInt('pin') ?? 0;
     notifyListeners();
   }

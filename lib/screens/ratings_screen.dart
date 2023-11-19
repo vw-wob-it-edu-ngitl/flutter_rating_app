@@ -88,15 +88,15 @@ class RatingsPage extends StatelessWidget {
                   AppLocalizations.of(context)!.ratingScreenHeadline,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 40
+                    fontSize: 34
                   ),
                 ),
                 Expanded(child: Container()),
-                // const SizedBox(
-                //   height: 200,
-                //   width: 200,
-                //   child: Placeholder(),
-                // )
+                const SizedBox(
+                  height: 200,
+                  width: 200,
+                  child: Image(image: AssetImage('assets/images/png/e_motion_day_logo_full_430px.png')),
+                )
               ],
             ),
             Center(
@@ -108,7 +108,7 @@ class RatingsPage extends StatelessWidget {
                   const SizedBox(width: 10),
                   EmojiButton.low(onClicked: buttonCallback),
                   const SizedBox(width: 10),
-                  EmojiButton.medium(caption: AppLocalizations.of(context)!.ratingScreenRatingMedium, onClicked: buttonCallback),
+                  EmojiButton.medium(onClicked: buttonCallback),
                   const SizedBox(width: 10),
                   EmojiButton.high(onClicked: buttonCallback),
                   const SizedBox(width: 10),

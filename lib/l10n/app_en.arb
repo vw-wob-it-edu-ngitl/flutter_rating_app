@@ -12,10 +12,10 @@
 
   "ratingThankYouMessage": "Awesome!\nThank You!!!",
   "ratingScreenAppBarTitle": "Rate us!",
-  "ratingScreenHeadline": "How was your experience?",
-  "ratingScreenRatingVeryBad": "Very bad!",
+  "ratingScreenHeadline": "How satisfied were you with the eMotionDay at the Lean Academy?",
+  "ratingScreenRatingVeryBad": "Very unsatisfied!",
   "ratingScreenRatingMedium": "Medium",
-  "ratingScreenRatingVeryGood": "Very good!",
+  "ratingScreenRatingVeryGood": "Very satisfied!",
 
   "resultsScreenAppBarTitle": "Results",
   "resultsScreenClear": "Clear!",

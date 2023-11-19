@@ -1,4 +1,5 @@
 // Copyright (C) 2023 twyleg
+import 'package:kiosk_mode/kiosk_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -75,6 +76,9 @@ class _RatingAppState extends State<RatingApp> {
 
   @override
   Widget build(BuildContext context) {
+
+    startKioskMode();
+
     return ChangeNotifierProvider.value(
       value: ratingAppModel,
       child: Consumer<RatingAppModel>(
